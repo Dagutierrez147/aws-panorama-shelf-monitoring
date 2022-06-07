@@ -2,14 +2,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-console */
 import React, { useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
+/*import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import { Box, InputLabel } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";*/
+/*import { makeStyles } from "@material-ui/core/styles";*/
+/*import { Box, InputLabel } from "@material-ui/core";*/
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import { getShelfMonitor } from "../graphql/queries";
@@ -17,7 +15,7 @@ import { updateShelfMonitor, createShelfMonitor } from "../graphql/mutations";
 
 Amplify.configure(awsconfig);
 
-const useStyles = makeStyles((theme) => ({
+/*const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 140,
@@ -25,19 +23,21 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-}));
+}));*/
 
 function InventoryThreshold() {
-  const classes = useStyles();
-  const productType = "BOTTLE";
+  /*const classes = useStyles();*/
+  const productType = "lays";
+  const product = "snacks";
 
-  const [thresholdState, setThreshold] = React.useState({ threshold: "" });
+  /*const [thresholdState, setThreshold] = React.useState({ threshold: "" });*/
 
   async function getThreshold() {
     try {
       const threshold = await API.graphql(
         graphqlOperation(getShelfMonitor, {
           ProductType: productType,
+          Product: product
         }),
       );
       if (threshold.data.getShelfMonitor == null) {
@@ -60,6 +60,7 @@ function InventoryThreshold() {
         graphqlOperation(updateShelfMonitor, {
           input: {
             ProductType: productType,
+            Product: product,
             Threshold: threshold,
             s3Uri: "./default.png",
             count: 9000,
@@ -74,6 +75,7 @@ function InventoryThreshold() {
           graphqlOperation(createShelfMonitor, {
             input: {
               ProductType: productType,
+              Product: product,
               Threshold: threshold,
             },
           }),
@@ -95,31 +97,27 @@ function InventoryThreshold() {
   };
 
   return (
-    <Grid item xs={5}>
-      <Paper>
-        <Typography variant="h5" style={{ textAlign: "center", padding: 10 }}>
-          Specify how low the item count should be before you get notified of a
-          low inventory.
-        </Typography>
-        <Box display="flex" justifyContent="center">
-          <FormControl className={classes.formControl}>
-            <InputLabel style={{ fontSize: 20, color: "#FF9900" }}>
-              <em>Alert Threshold</em>
-            </InputLabel>
-            <Select
-              id="select-threshold"
-              value={thresholdState.threshold}
-              onChange={handleChange}
-            >
-              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                <MenuItem value={num}>{num}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-      </Paper>
-    </Grid>
+    <div>
+{/*
+      <Typography variant="h6" style={{ textAlign: "center", padding: 5 }}>
+        Inventory threshold
+      </Typography>
+      <Box display="flex" justifyContent="center">
+        <FormControl className={classes.formControl}>
+          <InputLabel style={{ fontSize: 18, color: "#FF9900" }}>
+            <em>Alert Threshold</em>
+          </InputLabel>
+          <Select id="select-threshold" value={thresholdState.threshold} onChange={handleChange}>
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+              <MenuItem value={num}>Threshold: {num}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+            */}
+    </div>
   );
+
 }
 
 export default InventoryThreshold;
